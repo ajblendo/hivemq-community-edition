@@ -245,8 +245,8 @@ tasks.shadowJar {
     mergeServiceFiles()
 }
 
-tasks.register<Zip>("packaging") {
-    group = "packaging"
+tasks.register<Zip>("hivemqZip") {
+    group = "build"
 
     val name = "hivemq-ce-${project.version}"
 
@@ -259,7 +259,7 @@ tasks.register<Zip>("packaging") {
     into(name)
 }
 
-defaultTasks("clean", "packaging")
+defaultTasks("hivemqZip")
 
 tasks.javadoc {
     (options as StandardJavadocDocletOptions).addStringOption("-html5")
@@ -473,7 +473,7 @@ tasks.register("updateThirdPartyLicenses") {
 publishing {
     publications {
         register<MavenPublication>("distribution") {
-            artifact(tasks.named("packaging"))
+            artifact(tasks.named("hivemqZip"))
 
             artifactId = "hivemq-community-edition"
         }

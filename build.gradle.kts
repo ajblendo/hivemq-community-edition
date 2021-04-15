@@ -77,8 +77,9 @@ metadata {
 /* ******************** java ******************** */
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
 
     withJavadocJar()
     withSourcesJar()
@@ -338,10 +339,6 @@ tasks.javadoc {
 
 
 /* ******************** checks ******************** */
-
-if (!System.getProperty("java.version").startsWith("11")) {
-    throw RuntimeException("Incompatible JRE version: " + System.getProperty("java.version") + ". Use JRE 11 instead.")
-}
 
 jacoco {
     toolVersion = "${property("jacoco.version")}"

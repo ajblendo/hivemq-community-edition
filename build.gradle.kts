@@ -242,10 +242,11 @@ tasks.jar {
 }
 
 tasks.shadowJar {
+    archiveClassifier.set("shaded")
     mergeServiceFiles()
 }
 
-tasks.register<Zip>("hivemqZip") {
+val hivemqZip by tasks.registering(Zip::class) {
     group = "build"
 
     val name = "hivemq-ce-${project.version}"
@@ -473,7 +474,7 @@ tasks.register("updateThirdPartyLicenses") {
 publishing {
     publications {
         register<MavenPublication>("distribution") {
-            artifact(tasks.named("hivemqZip"))
+            artifact(hivemqZip)
 
             artifactId = "hivemq-community-edition"
         }

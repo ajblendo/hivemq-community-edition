@@ -28,9 +28,10 @@ parts: #parts are used to describe your application,where its various components
     source: https://github.com/DC2-DanielKrueger/hivemq-community-edition
     source-type: git
     override-pull: |
+      git clone https://github.com/hivemq/hivemq-extension-sdk.git
       snapcraftctl pull
       git fetch
-      git checkout 2020.6-fix-run.sh
+      git checkout "2021.6-special"
     gradle-version: '6.8.1'
     #gradle-output-dir: BIN
     #gradle-options: [ binZip, -xtest, -xcreateGitTag ]

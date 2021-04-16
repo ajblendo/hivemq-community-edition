@@ -28,8 +28,8 @@ parts: #parts are used to describe your application,where its various components
     source: https://github.com/DC2-DanielKrueger/hivemq-community-edition
     source-type: git
     override-pull: |
-      git clone https://github.com/hivemq/hivemq-extension-sdk.git /root/parts/hivemq-ce-2021/src
       snapcraftctl pull
+      git clone https://github.com/hivemq/hivemq-extension-sdk.git /root/parts/hivemq-ce-2021/hivemq-extension-sdk
       git fetch
       git checkout "2021-fix-run.sh"
     gradle-version: '6.8.1'

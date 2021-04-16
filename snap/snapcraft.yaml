@@ -12,7 +12,7 @@ confinement: devmode # use 'strict' once you have the right plugs and slots
 
 apps:
   hivemq-ce-2021:
-    command: hivemq-ce-2021.1/bin/run.sh
+    command: hivemq-ce-2021.2-SNAPSHOT/bin/run.sh
     environment:
       JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
       PATH: $JAVA_HOME/bin:$PATH
@@ -37,7 +37,7 @@ parts: #parts are used to describe your application,where its various components
     #gradle-options: [ binZip, -xtest, -xcreateGitTag ]
     override-build: |
       ./gradlew packaging
-      unzip -o /root/parts/hivemq-ce/build/build/zip/hivemq-ce-2021.1.zip -d $SNAPCRAFT_PART_INSTALL/
+      unzip -o /root/parts/hivemq-ce-2021/build/build/zip/hivemq-ce-2021.2-SNAPSHOT.zip  -d $SNAPCRAFT_PART_INSTALL/
 
     build-packages:
       - unzip

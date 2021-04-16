@@ -15,7 +15,9 @@ apps:
     command: hivemq-ce-2020.6/bin/run.sh
     environment:
       JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
-      PATH: $JAVA_HOME/jre/bin:$PATH
+      PATH: $JAVA_HOME/bin:$PATH
+      HIVEMQ_DATA_FOLDER: $SNAP_DATA/data
+      HIVEMQ_LOG_FOLDER: $SNAP_DATA/log
     plugs:
       - home
       - network
@@ -23,13 +25,41 @@ apps:
 parts: #parts are used to describe your application,where its various components can be found, its build and run-time requirements, and those of its dependencies.
   hivemq-ce:
     plugin: gradle
-    source: https://github.com/hivemq/hivemq-community-edition.git
-    source-tag: '2020.6'
+    source: https://github.com/DC2-DanielKrueger/hivemq-community-edition
+    source-type: git
+    override-pull: |
+      snapcraftctl pull
+      git fetch
+      git checkout "2020.6-special"
     gradle-version: '6.8.1'
+    #gradle-output-dir: BIN
+    #gradle-options: [ binZip, -xtest, -xcreateGitTag ]
     override-build: |
       ./gradlew packaging
       unzip -o /root/parts/hivemq-ce/build/build/zip/hivemq-ce-2020.6.zip -d $SNAPCRAFT_PART_INSTALL/
+
     build-packages:
       - unzip
+      - git
     stage-packages:
       - openjdk-11-jre
+
+#/snap/bin/hivemq-ce   -here is the hivemq app stored
+#/Users/bajazi/HiveMQProducts/hivemq-ce  -here is the generated hivemq.snap
+
+#/snap/hivemq-ce/current/hivemq-ce-2020.6 -here are log and data stored
+#/snap/bin/   -all soft files
+
+
+#home/ubuntu/snap/bin/hivemq-ce/current -deadend
+#/var/snap/hivemq-ce/current  -deadend
+
+    #mkdir $SNAP/home/ubuntu/snap/bin/hivemq-ce/current/HIVEMQ_HOME
+    #mkdir $SNAP/home/ubuntu/snap/bin/hivemq-ce/current/HIVEMQ_DATA_FOLDER
+    #mkdir $SNAP/home/ubuntu/snap/bin/hivemq-ce/current/HIVEMQ_LOG_FOLDER
+
+#fork hivemq-ce
+#2020.6
+#run-sh modifizieren und neuen Tag machen und commiten
+#setze variable für log und data so ,dass es in einem writable area redirected wird
+#run.sh file ändern so dass hivehome

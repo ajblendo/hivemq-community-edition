@@ -30,7 +30,7 @@ parts: #parts are used to describe your application,where its various components
     override-pull: |
       snapcraftctl pull
       git fetch
-      git checkout "2020.6-special"
+      git checkout 2020.6-fix-run.sh
     gradle-version: '6.8.1'
     #gradle-output-dir: BIN
     #gradle-options: [ binZip, -xtest, -xcreateGitTag ]

@@ -16,8 +16,8 @@ apps:
     environment:
       JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
       PATH: $JAVA_HOME/bin:$PATH
-      HIVEMQ_DATA_FOLDER: $SNAP_DATA/data
-      HIVEMQ_LOG_FOLDER: $SNAP_DATA/log
+      HIVEMQ_DATA_FOLDER: $SNAP_USER_DATA/data
+      HIVEMQ_LOG_FOLDER: $SNAP_USER_DATA/log
     plugs:
       - home
       - network
@@ -54,9 +54,6 @@ parts: #parts are used to describe your application,where its various components
 #home/ubuntu/snap/bin/hivemq-ce/current -deadend
 #/var/snap/hivemq-ce/current  -deadend
 
-    #mkdir $SNAP/home/ubuntu/snap/bin/hivemq-ce/current/HIVEMQ_HOME
-    #mkdir $SNAP/home/ubuntu/snap/bin/hivemq-ce/current/HIVEMQ_DATA_FOLDER
-    #mkdir $SNAP/home/ubuntu/snap/bin/hivemq-ce/current/HIVEMQ_LOG_FOLDER
 
 #fork hivemq-ce
 #2020.6

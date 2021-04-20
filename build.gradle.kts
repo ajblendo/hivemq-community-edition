@@ -311,9 +311,7 @@ dependencyCheck {
     suppressionFile = "$projectDir/gradle/dependency-check/suppress.xml"
 }
 
-tasks.check {
-    dependsOn(tasks.dependencyCheckAnalyze)
-}
+tasks.check { dependsOn(tasks.dependencyCheckAnalyze) }
 
 forbiddenApis {
     bundledSignatures = setOf("jdk-system-out")
@@ -324,9 +322,7 @@ tasks.forbiddenApisMain {
     exclude("**/LoggingBootstrap.class")
 }
 
-tasks.forbiddenApisTest {
-    enabled = false
-}
+tasks.forbiddenApisTest { enabled = false }
 
 
 /* ******************** compliance ******************** */
@@ -432,7 +428,7 @@ downloadLicenses {
     excludeDependencies = listOf("com.hivemq:hivemq-extension-sdk:${property("hivemq-extension-sdk.version")}")
 }
 
-tasks.register("updateThirdPartyLicenses") {
+val updateThirdPartyLicenses by tasks.registering {
     group = "license"
     dependsOn(tasks.downloadLicenses)
     doLast {

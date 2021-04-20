@@ -220,12 +220,6 @@ tasks.test {
         events = setOf(TestLogEvent.STARTED, TestLogEvent.FAILED)
         exceptionFormat = TestExceptionFormat.FULL
     }
-
-    // use the same tmpdir as the runner
-    val tempDir = System.getProperty("java.io.tmpdir")
-    if (tempDir != null) {
-        jvmArgs("-Djava.io.tmpdir=$tempDir")
-    }
 }
 
 
@@ -254,8 +248,8 @@ val hivemqZip by tasks.registering(Zip::class) {
     destinationDirectory.set(buildDir.resolve("zip"))
     archiveFileName.set("$name.zip")
 
-    from("$projectDir/src/packaging") { exclude("**/.gitkeep") }
-    from("$projectDir/src/main/resources/config.xml") { into("conf") }
+    from(projectDir.resolve("src/packaging")) { exclude("**/.gitkeep") }
+    from(projectDir.resolve("src/main/resources/config.xml")) { into("conf") }
     from(tasks.shadowJar) { into("bin").rename { "hivemq.jar" } }
     into(name)
 }
@@ -276,13 +270,13 @@ tasks.javadoc {
 
     doLast { // javadoc search fix for jdk 11 https://bugs.openjdk.java.net/browse/JDK-8215291
         copy {
-            from("$destinationDir/search.js")
+            from(destinationDir!!.resolve("search.js"))
             into(temporaryDir)
             filter { line -> line.replace("if (ui.item.p == item.l) {", "if (item.m && ui.item.p == item.l) {") }
         }
-        delete("$destinationDir/search.js")
+        delete(destinationDir!!.resolve("search.js"))
         copy {
-            from("$temporaryDir/search.js")
+            from(temporaryDir.resolve("search.js"))
             into(destinationDir!!)
         }
     }
@@ -305,7 +299,6 @@ pmd {
 spotbugs {
     toolVersion.set("${property("spotbugs.version")}")
     ignoreFailures.set(true)
-    reportsDir.fileValue(file("${buildDir}/reports/findbugs"))
     reportLevel.set(com.github.spotbugs.snom.Confidence.MEDIUM)
 }
 
@@ -315,7 +308,7 @@ dependencyCheck {
     }
     format = org.owasp.dependencycheck.reporting.ReportGenerator.Format.ALL
     scanConfigurations = listOf("runtimeClasspath")
-    suppressionFile = "${projectDir}/gradle/dependency-check/suppress.xml"
+    suppressionFile = "$projectDir/gradle/dependency-check/suppress.xml"
 }
 
 tasks.check {
@@ -339,7 +332,7 @@ tasks.forbiddenApisTest {
 /* ******************** compliance ******************** */
 
 license {
-    header = file("$projectDir/HEADER")
+    header = projectDir.resolve("HEADER")
     mapping("java", "SLASHSTAR_STYLE")
 }
 

@@ -27,7 +27,6 @@ apps: #apps detailing how apps and services are exposed to the host system:
       - network
       - network-bind
       - system-observe
-      - config-hivemq
     #slots: #Slots for interfaces to connect to. Provides Information
 
 

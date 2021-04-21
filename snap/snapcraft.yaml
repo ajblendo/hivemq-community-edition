@@ -1,5 +1,7 @@
-name: hivemq-ce-2021
-base: core18
+name: hivemq-ce-2021 #The identifying name of the snap.
+title: HiveMQ Community Edition
+#icon: hivemq logo
+base: core18  #A snap of type base to be used as the execution environment for this snap.
 version: '2021.1'
 summary: HiveMQ CE is a Java-based open source MQTT broker
 description:
@@ -7,57 +9,68 @@ description:
   HiveMQ CE is the foundation of the HiveMQ enterprise-connectivity and messaging platform and implements all MQTT features.
   This project is the technical core of many large MQTT deployments and is now available as open source software under the Apache 2 license.
 
-grade: devel
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: devel #Defines the quality grade of the snap
+confinement: devmode # use 'strict' once you have the right plugs and slots. Determines if the snap should be restricted in access or not.
 
-apps:
+apps: #apps detailing how apps and services are exposed to the host system:
   hivemq-ce-2021:
     command: hivemq-ce-2021.2-SNAPSHOT/bin/run.sh
-    environment:
+    daemon: simple   #Declares that <app-name> is a system daemon. Run for as along as the service is active
+    restart-condition: always #Condition to restart the daemon under. always: Clean exit code or signal
+    environment: #A set of key-value pairs specifying the contents of environment variables.
       JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
       PATH: $JAVA_HOME/bin:$PATH
-      HIVEMQ_DATA_FOLDER: $SNAP_USER_DATA/data
-      HIVEMQ_LOG_FOLDER: $SNAP_USER_DATA/log
-    plugs:
+      HIVEMQ_DATA_FOLDER: $SNAP_DATA/data
+      HIVEMQ_LOG_FOLDER: $SNAP_DATA/log
+    plugs: #Plugs for interfaces to connect to. Consumes Information
       - home
       - network
+      - network-bind
+      - system-observe
+      - config-hivemq
+    #slots: #Slots for interfaces to connect to. Provides Information
+
+
+
+    #snappy debug output:
+  #Suggestions:
+  #* adjust program to not access '/sys/fs/cgroup/memory/system.slice/snap.hivemq-ce-2021.hivemq-ce-2021.service/memory.stat'
+  #* adjust program to not access '/sys/fs/cgroup/memory/system.slice/snap.hivemq-ce-[0-9]*.hivemq-ce-[0-9]*.service/memory.stat'
+
+  #possible solutions
+  #physical-memory-control	read and write memory used by any process	no
+  #physical-memory-observe	read memory used by any process	no
+  #system-files read or write files in the system
+  #system-observe read process and system information
+  #network-bind	operate as a network service
+  #browser-support	use functions essential for Web browsers
+  #log-observe	read system logs
 
 parts: #parts are used to describe your application,where its various components can be found, its build and run-time requirements, and those of its dependencies.
   hivemq-ce-2021:
     plugin: gradle
-    source: https://github.com/DC2-DanielKrueger/hivemq-community-edition
+    gradle-version: '6.8.1'
+    #gradle-output-dir: BIN
+    #gradle-options: [ binZip, -xtest, -xcreateGitTag ]
+    source: https://github.com/DC2-DanielKrueger/hivemq-community-edition #Defines the source of the software
     source-type: git
-    override-pull: |
+    override-pull: | #Replaces a plugin’s default pull process with a script.
       snapcraftctl pull
       git clone https://github.com/hivemq/hivemq-extension-sdk.git /root/parts/hivemq-ce-2021/hivemq-extension-sdk
       git fetch
       git checkout "2021-fix-run.sh"
-    gradle-version: '6.8.1'
-    #gradle-output-dir: BIN
-    #gradle-options: [ binZip, -xtest, -xcreateGitTag ]
-    override-build: |
+    override-build: | #Replaces a plugin’s default build process with a script.
       ./gradlew packaging
       unzip -o /root/parts/hivemq-ce-2021/build/build/zip/hivemq-ce-2021.2-SNAPSHOT.zip  -d $SNAPCRAFT_PART_INSTALL/
+    build-packages: [unzip, git]
+    stage-packages: [openjdk-11-jre]
 
-    build-packages:
-      - unzip
-      - git
-    stage-packages:
-      - openjdk-11-jre
+   # prime: copies the staged components into the priming area, to their final locations for the resulting snap. always inside the snap dir
+    #  -
 
 #/snap/bin/hivemq-ce   -here is the hivemq app stored
 #/Users/bajazi/HiveMQProducts/hivemq-ce  -here is the generated hivemq.snap
-
 #/snap/hivemq-ce/current/hivemq-ce-2020.6 -here are log and data stored
 #/snap/bin/   -all soft files
+#/daemon: simple
 
-
-#home/ubuntu/snap/bin/hivemq-ce/current -deadend
-#/var/snap/hivemq-ce/current  -deadends
-
-
-#fork hivemq-ce
-#2020.6
-#run-sh modifizieren und neuen Tag machen und commiten
-#setze variable für log und data so ,dass es in einem writable area redirected wird
-#run.sh file ändern so dass hivehome

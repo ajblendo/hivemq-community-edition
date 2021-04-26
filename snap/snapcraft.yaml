@@ -29,22 +29,6 @@ apps: #apps detailing how apps and services are exposed to the host system:
       - system-observe
     #slots: #Slots for interfaces to connect to. Provides Information
 
-
-
-    #snappy debug output:
-  #Suggestions:
-  #* adjust program to not access '/sys/fs/cgroup/memory/system.slice/snap.hivemq-ce-2021.hivemq-ce-2021.service/memory.stat'
-  #* adjust program to not access '/sys/fs/cgroup/memory/system.slice/snap.hivemq-ce-[0-9]*.hivemq-ce-[0-9]*.service/memory.stat'
-
-  #possible solutions
-  #physical-memory-control	read and write memory used by any process	no
-  #physical-memory-observe	read memory used by any process	no
-  #system-files read or write files in the system
-  #system-observe read process and system information
-  #network-bind	operate as a network service
-  #browser-support	use functions essential for Web browsers
-  #log-observe	read system logs
-
 parts: #parts are used to describe your application,where its various components can be found, its build and run-time requirements, and those of its dependencies.
   hivemq-ce-2021:
     plugin: gradle
@@ -64,12 +48,7 @@ parts: #parts are used to describe your application,where its various components
     build-packages: [unzip, git]
     stage-packages: [openjdk-11-jre]
 
-   # prime: copies the staged components into the priming area, to their final locations for the resulting snap. always inside the snap dir
-    #  -
 
-#/snap/bin/hivemq-ce   -here is the hivemq app stored
-#/Users/bajazi/HiveMQProducts/hivemq-ce  -here is the generated hivemq.snap
-#/snap/hivemq-ce/current/hivemq-ce-2020.6 -here are log and data stored
-#/snap/bin/   -all soft files
-#/daemon: simple
+
+
 
